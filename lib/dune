@@ -1,0 +1,4 @@
+(library
+ (name quests)
+ (libraries lwt cohttp cohttp-lwt-unix yojson ezgzip)
+ (preprocess (pps ppx_deriving.show)))
