@@ -1,9 +1,12 @@
 open Lwt
 
-(* [String.escaped] but not escaping newlines *)
-let escaped_literal_newlines s =
-  let lines = String.split_on_char '\n' s in
-  String.concat "\n" (List.map String.escaped lines)
+module Request = struct
+  type t = {
+    url: string;
+    headers: Cohttp.Header.t; [@printer Cohttp.Header.pp_hum]
+  }
+  [@@deriving show]
+end
 
 module Response = struct
   (* OCaml strings are just bytes, no encoding, so no text *)
@@ -11,9 +14,10 @@ module Response = struct
   type t = {
     content: string;
         [@printer
-          fun fmt s -> fprintf fmt {|"%s"|} (escaped_literal_newlines s)]
+          fun fmt s -> fprintf fmt {|"%s"|} (Utils.escaped_literal_newlines s)]
     status_code: int;
-    headers: (string * string) list;
+    headers: Cohttp.Header.t; [@printer Cohttp.Header.pp_hum]
+    request: Request.t; (* TODO - custom pp as list of tuples *)
   }
   [@@deriving show]
 
@@ -31,20 +35,6 @@ module Response = struct
     if ok response then Ok response else Error response
 end
 
-type payload =
-  | Json of Yojson.t
-  | Form of (string * string) list
-  | Raw of string
-
-type authentication = Basic of string * string | Bearer of string
-
-let data_to_body data =
-  data
-  |> List.map (fun (key, value) -> (key, [ value ]))
-  |> Uri.encoded_of_query |> Cohttp_lwt.Body.of_string
-
-let json_to_body json = json |> Yojson.to_string |> Cohttp_lwt.Body.of_string
-
 let resolve_location_uri ~location_uri ~reference_uri =
   match Uri.host location_uri with
   | Some _ ->
@@ -57,42 +47,8 @@ let resolve_location_uri ~location_uri ~reference_uri =
 
 let rec request meth ?data ?params ?headers ?auth ?(follow_redirects = true) url
     =
-  let request_headers = Cohttp.Header.init () in
-  let request_headers =
-    Cohttp.Header.add request_headers "accept-encoding" "gzip"
-  in
-  let body, request_headers =
-    let body, new_headers_list =
-      match data with
-      | Some (Form data) ->
-          ( Some (data_to_body data),
-            [ ("Content-Type", "application/x-www-form-urlencoded") ] )
-      | Some (Json json) ->
-          (Some (json_to_body json), [ ("Content-Type", "application/json") ])
-      | Some (Raw s) -> (Some (Cohttp_lwt.Body.of_string s), [])
-      | None -> (None, [])
-    in
-    (body, Cohttp.Header.add_list request_headers new_headers_list)
-  in
-  let request_headers =
-    match auth with
-    | Some (Basic (username, password)) ->
-        Cohttp.Header.add_authorization request_headers
-          (`Basic (username, password))
-    | Some (Bearer s) ->
-        Cohttp.Header.add_authorization request_headers (`Other ("Bearer " ^ s))
-    | None -> request_headers
-  in
-  let request_headers =
-    match headers with
-    | Some specified_headers ->
-        Cohttp.Header.add_list request_headers specified_headers
-    | None -> request_headers
-  in
-  let uri =
-    match params with
-    | Some params -> Uri.(add_query_params' (Uri.of_string url) params)
-    | None -> Uri.of_string url
+  let { Requests.meth; body; request_headers; uri } =
+    Requests.make_request_data meth ?data ?params ?headers ?auth url
   in
   Cohttp_lwt_unix.Client.call meth ?body ~headers:request_headers uri
   >>= fun (response, body) ->
@@ -107,6 +63,7 @@ let rec request meth ?data ?params ?headers ?auth ?(follow_redirects = true) url
   | 302, true, Some location_uri
   | 307, true, Some location_uri
   | 308, true, Some location_uri ->
+      (* Don't change method to GET on 301 (even though it's somewhat permitted) *)
       let location_uri =
         resolve_location_uri ~location_uri ~reference_uri:uri
       in
@@ -118,7 +75,6 @@ let rec request meth ?data ?params ?headers ?auth ?(follow_redirects = true) url
       let location_uri =
         resolve_location_uri ~location_uri ~reference_uri:uri
       in
-      Printf.printf "Location: %s\n" (Uri.to_string location_uri);
       request `GET ?data:None ?params ?headers ?auth ~follow_redirects
         (Uri.to_string location_uri)
   | _ ->
@@ -131,7 +87,8 @@ let rec request meth ?data ?params ?headers ?auth ?(follow_redirects = true) url
       {
         Response.content;
         status_code;
-        headers = response_headers |> Cohttp.Header.to_list;
+        headers = response_headers;
+        request = { Request.url = Uri.to_string uri; headers = request_headers };
       }
 
 let get ?data ?headers ?auth = request `GET ?data ?headers ?auth
