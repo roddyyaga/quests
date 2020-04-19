@@ -1,3 +1,5 @@
+![Build](https://github.com/roddyyaga/quests/workflows/Build%20and%20run%20tests/badge.svg?branch=master)
+
 # Quests
 
 Quests is an HTTP library built on top of [Cohttp](https://github.com/mirage/ocaml-cohttp). The API is closely inspired by [Python's Requests](https://github.com/psf/requests/).
