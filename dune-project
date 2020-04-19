@@ -17,7 +17,7 @@ cohttp
 cohttp-lwt-unix
 yojson
 ppx_yojson
-ppx_deriving.show
+ppx_deriving
 ezgzip
 (alcotest :with-test)
 (alcotest-lwt :with-test)))
