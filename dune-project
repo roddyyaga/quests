@@ -1,14 +1,22 @@
-(lang dune 2.4)
-(name quests)
+(lang dune 2.0)
 (generate_opam_files true)
+(name quests)
+(version 0.1)
+(documentation "https://github.com/roddyyaga/quests")
+(license MIT)
+(authors "Roddy MacSween <github@roddymacsween.co.uk>")
+(maintainers "Roddy MacSween <github@roddymacsween.co.uk>")
 
 (package
 (name quests)
-(synopsis "Python requests but it's OCaml")
+(synopsis "HTTP client library like Python requests")
 (depends
-dune
-ssl
-lwt_ssl
 lwt
 cohttp
-cohttp-lwt-unix))
+cohttp-lwt-unix
+yojson
+ppx_yojson
+ppx_deriving.show
+ezgzip
+(alcotest :with-test)
+(alcotest-lwt :with-test)))
