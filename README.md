@@ -1,4 +1,4 @@
-![Build](https://github.com/roddyyaga/quests/workflows/Build%20and%20run%20tests/badge.svg?branch=master)
+![Build](https://github.com/roddyyaga/quests/workflows/Build/badge.svg)
 
 # Quests
 
