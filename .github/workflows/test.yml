@@ -13,7 +13,7 @@ jobs:
     - uses: avsm/setup-ocaml@master
       with:
         ocaml-version: ${{ matrix.ocaml-version }}
-    - run: opam pin add hello.dev -n .
+    - run: opam pin add quests.dev --no-action .
     - run: opam install -t . --deps-only
     - run: opam exec -- dune build @install
     - run: opam exec -- dune runtest
