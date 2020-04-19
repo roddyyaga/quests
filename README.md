@@ -1,7 +1,6 @@
 # Quests
 
-Quests is an HTTP library built on top of [Cohttp](https://github.com/mirage/ocaml-cohttp). The API is similar to that
-of [Python's Requests](https://github.com/psf/requests/).
+Quests is an HTTP library built on top of [Cohttp](https://github.com/mirage/ocaml-cohttp). The API is closely inspired by [Python's Requests](https://github.com/psf/requests/).
 
 ## Installation
 

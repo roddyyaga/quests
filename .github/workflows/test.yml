@@ -1,0 +1,19 @@
+name: Build and run tests
+on: [push]
+jobs:
+  run:
+    name: Build
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [macos-latest, ubuntu-latest]
+        ocaml-version: ['4.09.0']
+    steps:
+    - uses: actions/checkout@master
+    - uses: avsm/setup-ocaml@1.0
+      with:
+        ocaml-version: ${{ matrix.ocaml-version }}
+    - run: opam pin add hello.dev -n .
+    - run: opam install -t . --deps-only
+    - run: opam exec -- dune build @install
+    - run: opam exec -- dune runtest

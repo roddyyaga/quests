@@ -11,6 +11,7 @@
 (name quests)
 (synopsis "HTTP client library like Python requests")
 (depends
+(dune (>= 2.0))
 lwt
 cohttp
 cohttp-lwt-unix
