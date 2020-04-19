@@ -15,5 +15,5 @@ jobs:
         ocaml-version: ${{ matrix.ocaml-version }}
     - run: opam pin add quests.dev --no-action .
     - run: opam install -t . --deps-only
-    - run: opam exec -- dune build @install
+    - run: opam exec -- dune build
     - run: opam exec -- dune runtest

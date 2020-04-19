@@ -12,6 +12,9 @@
 (synopsis "HTTP client library like Python requests")
 (depends
 (dune (>= 2.0))
+ssl
+lwt_ssl
+tls
 lwt
 cohttp
 cohttp-lwt-unix
