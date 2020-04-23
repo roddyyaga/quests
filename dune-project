@@ -2,14 +2,16 @@
 (generate_opam_files true)
 (name quests)
 (version 0.1)
-(documentation "https://github.com/roddyyaga/quests")
+(documentation "https://roddyyaga.github.io/quests/quests/index.html")
+(homepage "https://github.com/roddyyaga/quests")
+(bug_reports "https://github.com/roddyyaga/quests/issues")
 (license MIT)
 (authors "Roddy MacSween <github@roddymacsween.co.uk>")
 (maintainers "Roddy MacSween <github@roddymacsween.co.uk>")
 
 (package
 (name quests)
-(synopsis "HTTP client library like Python requests")
+(synopsis "HTTP/1.1 client library like Python requests")
 (depends
 (dune (>= 2.0))
 ssl
