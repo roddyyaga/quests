@@ -5,14 +5,8 @@ type cohttp_request_data = {
   uri: Uri.t;
 }
 
-type payload =
-  | Json of Yojson.t
-  | Form of (string * string) list
-  | Raw of string
-
-type authentication = Basic of string * string | Bearer of string
-
 let make_request_data meth ?data ?params ?headers ?auth url =
+  let open Request in
   let request_headers = Cohttp.Header.init () in
   let request_headers =
     Cohttp.Header.add request_headers "accept-encoding" "gzip"

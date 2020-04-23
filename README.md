@@ -2,7 +2,7 @@
 
 # Quests
 
-Quests is an HTTP library built on top of [Cohttp](https://github.com/mirage/ocaml-cohttp). The API is closely inspired by [Python's Requests](https://github.com/psf/requests/).
+Quests is an HTTP/1.1 client library using [Cohttp](https://github.com/mirage/ocaml-cohttp). The API is closely inspired by [Python's Requests](https://github.com/psf/requests/).
 
 ## Installation
 
@@ -41,12 +41,13 @@ let () =
 See `bin/examples.ml`.
 
 ## Features
-- Automatically handles gzipped responses
+- Reuses connections to the same host
+- Automatically decompresses gzipped responses
 - Can follow redirects
 - Basic or bearer authentication
 
 ## TODO
-- [ ] - sessions/connection pooling
+- [x] - sessions/connection pooling
 - [ ] - cookies
 - [ ] - digest authentication
 - [ ] - other compression schemes

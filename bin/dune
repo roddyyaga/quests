@@ -1,4 +1,4 @@
 (executable
- (name examples)
+ (name benchmark )
  (libraries quests)
- (preprocess (pps ppx_yojson)))
+ (preprocess (pps lwt_ppx ppx_yojson)))

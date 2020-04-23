@@ -1,0 +1,30 @@
+type ('a, 'b) t = {
+  in_stream_push: 'a option -> unit;
+  out_stream: 'b Lwt_stream.t;
+  queue: unit Lwt_condition.t Queue.t;
+  lock: Lwt_mutex.t;
+}
+
+let create in_stream_push out_stream =
+  let queue = Queue.create () in
+  let lock = Lwt_mutex.create () in
+  { in_stream_push; out_stream; queue; lock }
+
+let process { in_stream_push; out_stream; queue; lock } value =
+  (* Invariants:
+    *)
+  let%lwt () = Lwt_mutex.lock lock in
+  let () = in_stream_push (Some value) in
+  let output_ready = Lwt_condition.create () in
+  let () = Queue.push output_ready queue in
+  let () = Lwt_mutex.unlock lock in
+  let%lwt () = Lwt_condition.wait output_ready in
+  let output = Lwt_stream.next out_stream in
+  let _output_ready = Queue.pop queue in
+  let () =
+    match Queue.peek_opt queue with
+    | Some next_output_ready -> Lwt_condition.signal next_output_ready ()
+    | None -> ()
+    (* No more inputs waiting *)
+  in
+  output
