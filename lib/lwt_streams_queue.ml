@@ -1,5 +1,9 @@
-let peek_opt queue =
-  if Queue.is_empty queue then None else Some (Queue.peek queue)
+module Queue = struct
+  include Queue
+
+  let peek_opt queue =
+    if Queue.is_empty queue then None else Some (Queue.peek queue)
+end
 
 type ('a, 'b) t = {
   in_stream_push: 'a option -> unit;
