@@ -2,7 +2,7 @@
 
 # Quests
 
-Quests is an HTTP/1.1 client library using [Cohttp](https://github.com/mirage/ocaml-cohttp). The API is closely inspired by [Python's Requests](https://github.com/psf/requests/).
+Quests is an HTTP/1.1 client library using [Cohttp](https://github.com/mirage/ocaml-cohttp). The API is closely inspired by [Python's Requests](https://github.com/psf/requests/). See documentation [here](https://roddyyaga.github.io/quests/quests/index.html).
 
 ## Installation
 
@@ -31,14 +31,37 @@ let following_redirects () =
   Quests.get "http://httpbin.org/redirect/1"
   >|= Quests.Response.show >|= print_endline
 
+let basic_authentication () =
+    Quests.get "https://postman-echo.com/basic-auth" ~auth:(Basic ("username", "password"))
+  >|= Quests.Response.show >|= print_endline
+
+let bearer_authentication () =
+    Quests.get "https://example.com/some-api" ~auth:(Bearer "a token")
+  >|= Quests.Response.show >|= print_endline
+
+let sessions () =
+  let open Quests in
+  let s = Session.create () in
+  let%lwt () =
+    Session.get s "https://example.com" >|= Response.show >|= print_endline
+  in
+  Session.close s
+
 let () =
   Lwt_main.run
     (Lwt_list.iter_s
        (fun f -> f ())
-       [ get; post_form; post_json; gzip_response; following_redirects ])
+       [
+         get;
+         post_form;
+         post_json;
+         gzip_response;
+         following_redirects;
+         basic_authentication;
+         bearer_authentication;
+         sessions;
+       ])
 ```
-
-See `bin/examples.ml`.
 
 ## Features
 - Reuses connections to the same host

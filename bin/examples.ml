@@ -21,8 +21,23 @@ let following_redirects () =
   Quests.get "http://httpbin.org/redirect/1"
   >|= Quests.Response.show >|= print_endline
 
+let sessions () =
+  let open Quests in
+  let s = Session.create () in
+  let%lwt () =
+    Session.get s "https://example.com" >|= Response.show >|= print_endline
+  in
+  Session.close s
+
 let () =
   Lwt_main.run
     (Lwt_list.iter_s
        (fun f -> f ())
-       [ get; post_form; post_json; gzip_response; following_redirects ])
+       [
+         get;
+         post_form;
+         post_json;
+         gzip_response;
+         following_redirects;
+         sessions;
+       ])
