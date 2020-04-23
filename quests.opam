@@ -9,6 +9,7 @@ homepage: "https://github.com/roddyyaga/quests"
 doc: "https://roddyyaga.github.io/quests/quests/index.html"
 bug-reports: "https://github.com/roddyyaga/quests/issues"
 depends: [
+  "ocaml" {>= "4.05"}
   "dune" {>= "2.0"}
   "ssl"
   "lwt_ssl"
