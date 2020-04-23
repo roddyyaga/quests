@@ -14,7 +14,7 @@ jobs:
       with:
         ocaml-version: ${{ matrix.ocaml-version }}
     - run: opam pin add quests.dev --no-action .
-    - run: opam depext -yt quests
-    - run: opam install -t . --deps-only
+    - run: OPAMSOLVERTIMEOUT=3600 opam depext -yt quests
+    - run: OPAMSOLVERTIMEOUT=3600 opam install -t . --deps-only
     - run: opam exec -- dune build
     - run: opam exec -- dune runtest
