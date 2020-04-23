@@ -1,7 +1,3 @@
-module Option = struct
-  let value opt ~default = match opt with Some v -> v | None -> default
-end
-
 type cohttp_request_data = {
   meth: Cohttp.Code.meth;
   body: Cohttp_lwt.Body.t option;
