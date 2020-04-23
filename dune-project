@@ -14,7 +14,7 @@
 (name quests)
 (synopsis "HTTP/1.1 client library like Python requests")
 (depends
-(ocaml (>= 4.05))
+(ocaml (>= 4.06))
 (dune (>= 2.0))
 ssl
 lwt_ssl

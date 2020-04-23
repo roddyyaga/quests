@@ -1,3 +1,6 @@
+# 0.1.3
+- Bumped minimum OCaml version for tests
+
 # 0.1.2
 - Complete fix for OCaml versions below 4.08
 
