@@ -71,19 +71,23 @@ let test_session_many _ () =
 let () =
   let open Alcotest_lwt in
   Lwt_main.run
-  @@ run "Quests"
+  @@ Lwt.pick
        [
-         ( "methods",
+         Lwt_unix.sleep (60.0 *. 3.0);
+         run "Quests"
            [
-             test_case "Get" `Quick test_get;
-             test_case "Post" `Quick test_post;
-             test_case "Put" `Quick test_put;
-             test_case "Delete" `Quick test_delete;
-           ] );
-         ("authentication", [ test_case "Basic" `Quick test_basic_auth ]);
-         ( "session",
-           [
-             test_case "Methods" `Quick test_session;
-             test_case "Many methods" `Quick test_session_many;
-           ] );
+             ( "methods",
+               [
+                 test_case "Get" `Quick test_get;
+                 test_case "Post" `Quick test_post;
+                 test_case "Put" `Quick test_put;
+                 test_case "Delete" `Quick test_delete;
+               ] );
+             ("authentication", [ test_case "Basic" `Quick test_basic_auth ]);
+             ( "session",
+               [
+                 test_case "Methods" `Quick test_session;
+                 test_case "Many methods" `Quick test_session_many;
+               ] );
+           ];
        ]

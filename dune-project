@@ -1,7 +1,7 @@
 (lang dune 2.0)
 (generate_opam_files true)
 (name quests)
-(version 0.1.2)
+(version 0.1.3)
 (documentation "https://roddyyaga.github.io/quests/quests/index.html")
 (homepage "https://github.com/roddyyaga/quests")
 (bug_reports "https://github.com/roddyyaga/quests/issues")
