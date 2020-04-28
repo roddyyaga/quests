@@ -25,6 +25,7 @@ depends: [
   "alcotest" {with-test}
   "alcotest-lwt" {with-test}
 ]
+dev-repo: "git+https://github.com/roddyyaga/quests.git"
 build: [
   ["dune" "subst"] {pinned}
   [
@@ -35,8 +36,6 @@ build: [
     "-j"
     jobs
     "@install"
-    "@runtest" {with-test}
     "@doc" {with-doc}
   ]
 ]
-dev-repo: "git+https://github.com/roddyyaga/quests.git"
