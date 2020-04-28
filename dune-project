@@ -18,7 +18,6 @@
 (dune (>= 2.0))
 ssl
 lwt_ssl
-tls
 lwt
 cohttp
 cohttp-lwt-unix
