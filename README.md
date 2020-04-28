@@ -74,5 +74,6 @@ let () =
 - [ ] - cookies
 - [ ] - digest authentication
 - [ ] - other compression schemes
+- [ ] - timeouts
 
 Contributions welcome!
